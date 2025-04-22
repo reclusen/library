@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蔵書zosho - Personal Library</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="library.js" defer></script>
+</head>
+<body>
+    <main class="container">
+        <nav class="sidebar">
+            <h1 class="header">蔵書zosho</h1>
+            <ul class="nav-links">
+                <li class="nav-link"><a href="#"><i class="fa-solid fa-book-open-reader"></i>Currently Reading</a></li>
+                <li class="nav-link"><a href="#"><i class="fa-solid fa-book-open"></i>All Books</a></li>
+                <li class="nav-link"><a href="#"><i class="fa-solid fa-clock"></i>Recent</a></li>
+                <li class="nav-link"><a href="#"><i class="fa-solid fa-star"></i>Favorites</a></li>
+                <li class="nav-link"><a href="#"><i class="fa-solid fa-book-bookmark"></i>Bookmarks</a></li>
+                <li class="nav-link"><a href="#"><i class="fa-solid fa-circle-check"></i>Completed</a></li>
+                <li class="nav-link"><a href="#"><i class="fa-solid fa-glasses"></i>Authors</a></li>
+            </ul>
+            <button type="button" class="add-book"><i class="fa-solid fa-plus"></i>Add book</button>
+        </nav>
+        <section class="info-screen">
+            <div class="info-container hidden" data-category="current">
+                <!-- <i class="fa-solid fa-arrow-up-short-wide"></i> -->
+                <!-- CURRENTLY READING -->
+                <img src="./svg/book_half_fill.svg" alt="book-half-fill">
+                <p class="text-jp">まだ本は追加されていません。</p>
+                <p class="text-en">You have not added any books yet.</p>
+            </div>
+            <div class="info-container hidden" data-category="all-books">
+                <!-- <i class="fa-solid fa-arrow-up-short-wide"></i> -->
+                <!-- ALL BOOKS -->
+                <img src="./svg/books.svg" alt="lined-up-books">
+                <p class="text-jp">あなたのライブラリーは空です。</p>
+                <p class="text-en">Your library is empty.</p>
+            </div>
+            <div class="info-container hidden" data-category="recent">
+                <!-- <i class="fa-solid fa-arrow-up-short-wide"></i> -->
+                <!-- RECENT -->
+                <img src="./svg/neutral.svg" alt="deadpan-emoji">
+                <p class="text-jp">あなたはまだ本を読むことがありません。</p>
+                <p class="text-en">You have not read a book yet.</p>
+            </div>
+            <div class="info-container hidden" data-category="favorited">
+                <!-- <i class="fa-solid fa-arrow-up-short-wide"></i> -->
+                <!-- FAVORITES -->
+                <img src="./svg/favorites.svg" alt="bookmark-with-star">
+                <p class="text-jp">まだお気に入りの本はありません。</p>
+                <p class="text-en">You have no favorites.</p>
+            </div>
+            <div class="info-container hidden" data-category="bookmarked">
+                <!-- <i class="fa-solid fa-arrow-up-short-wide"></i> -->
+                <!-- BOOKMARKS -->
+                <img src="./svg/bookmarked_book.svg" alt="bookmarked-book">
+                <p class="text-jp">ブックマークはありません。</p>
+                <p class="text-en">You have no bookmarks.</p>
+            </div>
+            <div class="info-container hidden" data-category="completed">
+                <!-- <i class="fa-solid fa-arrow-up-short-wide"></i> -->
+                <!-- COMPLETED -->
+                <img src="./svg/expressionless.svg" alt="expressionless-emoji">
+                <p class="text-jp">あなたはまだ本を読み終えることがありません。</p>
+                <p class="text-en">You have not finished a book yet.</p>
+            </div>
+            <div class="info-container hidden" data-category="authors">
+                <!-- <i class="fa-solid fa-arrow-up-short-wide"></i> -->
+                <!-- AUTHORS -->
+                <img src="./svg/brush.svg" alt="brush">
+                <p class="text-jp">井の中の蛙大海を知らず。</p>
+                <p class="text-en">Broaden your horizons.</p>
+            </div>
+            <dialog class="form-dialog">
+                <button class="close"><i class="fa-solid fa-xmark"></i></button>
+                <form method="dialog" class="book-form">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" id="title">
+                    <label for="author">Author</label>
+                    <input type="text" name="author" id="author">
+                    <label for="year">Year</label>
+                    <input type="number" name="year" id="year" min="0">
+                    <label for="isbn">ISBN</label>
+                    <input type="text" name="isbn" id="isbn">
+                    <!-- pattern="^(?:ISBN(?:-13)?:?\ )?(?=[0-9]{13}$|(?=(?:[0-9]+[-\ ]){4})[-\ 0-9]{17}$)97[89][-\ ]?[0-9]{1,5}[-\ ]?[0-9]+[-\ ]?[0-9]+[-\ ]?[0-9]$" -->
+
+                    <button type="submit" class="add-book">Add</button>
+                </form>
+            </dialog>
+        </section>
+    </main>
+</body>
+</html>
