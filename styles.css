@@ -168,8 +168,7 @@ li {
     font-family: "Poiret One", sans-serif;
     font-size: 0.95rem;
     color: #202020;
-    margin: auto;
-    flex: 3;
+    flex: 2;
     width: 100%;
     opacity: 0;
 
@@ -206,19 +205,6 @@ li {
         background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><path style="fill: %2020208a" d="M11.941,28.877l-11.941-11.942l5.695-5.696l6.246,6.246l14.364-14.364L32,8.818"/></svg>');
     }
 
-    button[type="submit"] {
-        background-color: #242F33;
-        color: #f2f2f2;
-        border: 0;
-        border-radius: 50px;
-        font-family: "Poiret One", sans-serif;
-        font-size: 0.75rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        padding: 5px 15px;
-        cursor: pointer;
-    }
-
     /* i need to do more research on these */
     transition-property: opacity, overlay, display;
     transition-duration: 0.5s;
@@ -240,6 +226,27 @@ li {
     flex-direction: column;
     justify-content: end;
     flex: 1;
+}
+
+.book .rmv-btn {
+    background-color: unset;
+    color: transparent;
+    border: 0;
+    border-radius: 50px;
+    font-family: "Poiret One", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    align-self: center;
+    margin-top: 2.5px;
+    padding: 5px 15px;
+    cursor: pointer;
+    transition: all 0.35s ease-in-out;
+}
+
+.book .rmv-btn:hover {
+    background-color: #242F33;
+    color: #f2f2f2;
 }
 
 .book li {

@@ -46,6 +46,47 @@ class Library {
     
         closeBtn.addEventListener("click", () => dialog.close() );
     }
+
+    #deleteBook(id) {
+        const removeBtn = document.querySelector(".book .rmv-btn");
+        const books = this.books.filter(book => book["isbn"] != id);
+
+        removeBtn.style.fontSize = "0.5rem";
+        removeBtn.innerText = "Book successfully removed";
+
+        this.books = books;
+    }
+    
+    showBookStatus() {
+        const divBooks = document.querySelectorAll(".book");
+
+        divBooks.forEach((divBook) => {
+            divBook.addEventListener("click", e => { 
+
+                e.target.toggleAttribute("checked");
+
+                const a = document.createElement("input");
+
+                if (e.target.tagName == "INPUT") {
+                    Object.entries(Status).forEach(([statusName, status]) => {
+                        if (capitalize(e.target.id) == statusName && e.target.hasAttribute("checked")) {
+                            console.log(`Set book status [${statusName}]`);
+                            this.books.find(book => book["isbn"] == divBook.dataset.bookId).setStatus(status);
+                        }
+
+                        if (capitalize(e.target.id) == statusName && !e.target.hasAttribute("checked")) {
+                            console.log(`Removed book status [${statusName}]`);
+                            this.books.find(book => book["isbn"] == divBook.dataset.bookId).removeStatus(status);
+                        }
+                    });
+                }
+
+                if (e.target.tagName == "BUTTON") this.#deleteBook(divBook.dataset.bookId);
+
+                console.log(e.target.tagName);
+            });
+        });
+    }
     
     sortBy(type, order) {
         if (order == "ascending") return this.books.filter(book => book[type]);
@@ -61,9 +102,7 @@ class Library {
         if (arrLen == 0 && (className == "all-books" || className == "authors")) {
             arrLen = this.books.length;
             tempArr.push(...this.books);
-        } else {
-            tempArr.push(...bookArr);
-        }
+        } else tempArr.push(...bookArr);
 
         for (let i = 0; i < arrLen; i++) {
             const book = document.createElement("div");
@@ -76,19 +115,22 @@ class Library {
                 const keyCh = document.createElement("li");
                 keyCh.setAttribute("class", key);
 
-                if (key != "readStatus") {
-                    keyCh.innerText = tempArr[i][key];
-                }
+                if (key != "readStatus") keyCh.innerText = tempArr[i][key];
+
+                if (key == "isbn") book.setAttribute("data-book-id", tempArr[i][key]);
 
                 return keyCh;
             });
 
-            if (className != "all-books") {
-                book.classList.add(className);
-            }
+            if (className != "all-books") book.classList.add(className);
 
             const status = setStatusBoxOf(className);
 
+            const removeBtn = document.createElement("button");
+            removeBtn.setAttribute("class", "rmv-btn");
+            removeBtn.innerText = "Remove Book";
+
+            book.append(removeBtn);
             ul.append(...bookInfoNodes.slice(0, bookInfoNodes.length-1));
             book.append(status, ul);
 
@@ -100,34 +142,40 @@ class Library {
 }
 
 class Book {
+    #readStatus = [];
+
     constructor(title, author, year, isbn) {
         this.title = title;
         this.author = author;
         this.year = year;
         this.isbn = isbn;
     
-        this.readStatus = [Status.Recent];
+        this.#readStatus.push(Status.Recent);
     }
 
     setStatus(status) {
-        this.readStatus.push(status);
+        this.#readStatus.push(status);
     }
 
     removeStatus(status) {
-        if (this.readStatus.includes(status)) {
-            const idx = this.readStatus.indexOf(status);
+        if (this.#readStatus.includes(status)) {
+            const idx = this.#readStatus.indexOf(status);
 
             switch (idx) {
                 case 0:
-                    this.readStatus.shift();
+                    this.#readStatus.shift();
                     break;
-                case this.readStatus.length-1:
-                    this.readStatus.pop();
+                case this.#readStatus.length-1:
+                    this.#readStatus.pop();
                     break;
                 default:
-                    this.readStatus = this.readStatus.slice(0, idx) + this.readStatus.slice(idx+1);
+                    this.#readStatus = this.#readStatus.slice(0, idx) + this.#readStatus.slice(idx+1);
             }
         }
+    }
+
+    get readStatus() {
+        return this.#readStatus;
     }
 }
 
@@ -144,6 +192,7 @@ where books are categorized according to their read
 */
 function setLibrary() {
     const library = new Library();
+    
 
     navLinks.forEach((link, i) => {
         link.addEventListener("click", (e) => {
@@ -161,36 +210,17 @@ function setLibrary() {
 
             let filteredBooks = library.mapBooks(filterByStatus(library.books), sortedBy[i].dataset.category);
 
+            //displays dummy books if there are any added, and has a tagging feature that allows it to be categorized by
+            //status
             if (filteredBooks.length > 0) {
                 infoContainers[i].replaceChildren(...filteredBooks);
                 infoContainers[i].classList.remove("info-container");
 
-                const inputs = document.querySelectorAll(`input[type="checkbox"]`);
-                console.log(inputs);
 
-                const forms = document.querySelectorAll(".status");
-                forms.forEach((form, num) => {
-                    form.addEventListener("click", e => { 
-
-                        e.target.toggleAttribute("checked");
-
-                        Object.entries(Status).forEach(([statusName, status]) => {
-                            if (capitalize(e.target.id) == statusName && e.target.hasAttribute("checked")) {
-                                console.log(`Set book status [${statusName}]`);
-                                library.books[num].setStatus(status);
-                            }
-
-                            if (capitalize(e.target.id) == statusName && !e.target.hasAttribute("checked")) {
-                                console.log(`Removed book status [${statusName}]`);
-                                library.books[num].removeStatus(status);
-                            }
-                        });
-
-                        console.log(capitalize(e.target.id), e.target.hasAttribute("checked"));
-                    });
-                });
+                library.showBookStatus();
             }
 
+            //displays text for empty categories
             if (filteredBooks.length == 0) {
                 infoContainers[i].classList.remove("books");
                 infoContainers[i].append(textJP[i], textEN[i]);
@@ -203,6 +233,8 @@ function setLibrary() {
     library.addBook();
 }
 
+
+//for setting the status on each added book on hover
 function setStatusBoxOf(className) {
     const statuses = document.createElement("form");
     statuses.setAttribute("class", "status");
@@ -256,6 +288,7 @@ function setStatusBoxOf(className) {
     return statuses;
 }
 
+//allows the previous page to be hidden so the preceding/succeeding display can be shown properly
 function enableHiddenOnPrevious(navLinks, infoContainers) {
     infoContainers.forEach((container, i) => {
         if (!container.classList.contains("hidden")) {
